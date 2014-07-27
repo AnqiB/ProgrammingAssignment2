@@ -3,32 +3,33 @@
 ## it will calculate the inverse of x and store newly got value in the cached zone.
 ## '<<-' has been already defined in R.
 
-makeCacheMatrix <- function(x = matrix()) {
+makeCacheMatrix <- function(x = matrix()) { #take only one argument which is a matrix 
      Inver<-NULL  ## initialization of Inver
-	 set<-function(y){
+	 set<-function(y){ ## y is a matrix 
 	         x<<-y
 			 Inver<<-NULL
 	  }
 	 get<-function(){x} # the function "get" requires no arguments, returns x
-	 setInverse<-function(Inverse_vec){Inver<<-Inverse_vec}
+	 setInverse<-function(Inverse_vec){Inver<<-Inverse_vec} # set the inverse value, instead of calculating the inverse value 
 	 getInverse<-function(){Inver} # require no arguments, return Inver
 	 
 	 list(set=set,get=get,        
 	      setInverse=setInverse,
-		  getInverse=getInverse)
+		  getInverse=getInverse)  #return a list, in other words, the returned object is a list 
 
 }
 
 
-cacheSolve <- function(x, ...) {
-        Inver<-x$getInverse()  ## try to get the inverse matrix of x from the cached zone
+cacheSolve <- function(cacheX, ...) { #notice that the sentence "Inver<-cacheX$getInverse()" requires that "cahceX" has a "getInverse()" function,
+                                      #thus cacheX is the returned value of the function "makeCacheMatrix", using x as input value.  
+        Inver<-cacheX$getInverse()  ## try to get the inverse matrix of x from the cached zone 
 		if(!is.null(Inver)){   ## if found the cached matrix
 		        message("getting cached data")
 				return(Inver)    ## return the inverse matrix of x
 		}
-		data<-x$get()  
+		data<-cacheX$get()  
 		Inver<-solve(data,...) # the real calculate step of the function  
-		x$setInverse(Inver)
+		cacheX$setInverse(Inver)
 		Inver  ## Return a matrix that is the inverse of 'x'
 }
 
